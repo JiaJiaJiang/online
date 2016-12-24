@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts":{
-  	"strat":"node server/server.js"
+  	"start":"node server/server.js"
   },
   "author": "luojia@luojia.me",
   "license": "MTI",
