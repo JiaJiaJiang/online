@@ -1,0 +1,11 @@
+{
+  "name": "online",
+  "description": "online",
+  "version": "0.0.1",
+  "main": "server.js",
+  "author": "luojia@luojia.me",
+  "license": "MTI",
+  "dependencies": {
+    "ws": "^1.1.1"
+  }
+}
