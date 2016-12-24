@@ -19,6 +19,7 @@ log(options);
 
 var ws = new WebSocketServer({
 	port: options.port
+	host: options.host||'0.0.0.0'
 });
 
 console.log("creating online server  on port " + (options.port || 3309));
