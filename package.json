@@ -2,7 +2,7 @@
   "name": "online",
   "description": "online",
   "version": "0.0.1",
-  "main": "server.js",
+  "main": "server/server.js",
   "author": "luojia@luojia.me",
   "license": "MTI",
   "dependencies": {
