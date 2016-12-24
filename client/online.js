@@ -65,6 +65,6 @@ class Online{
 	close(){
 		this.on=false;
 		this.ws.close();
-		this.clearInterval(this.pinger);
+		clearInterval(this.pinger);
 	}
 }
