@@ -17,10 +17,11 @@ if (options.displayLogs !== true) {
 log('Settings:');
 log(options);
 
-var ws = new WebSocketServer({
-	port: options.port
-	host: options.host||'0.0.0.0'
-});
+var wsOpt={
+	port:options.port,
+}
+if(options.host)wsOpt.host=options.host;
+var ws = new WebSocketServer(wsOpt);
 
 console.log("creating online server  on port " + (options.port || 3309));
 
