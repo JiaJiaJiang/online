@@ -2,7 +2,10 @@
   "name": "online",
   "description": "online",
   "version": "0.0.1",
-  "main": "server/server.js",
+  "main": "index.js",
+  "scripts":{
+  	"strat":"node server/server.js"
+  },
   "author": "luojia@luojia.me",
   "license": "MTI",
   "dependencies": {
