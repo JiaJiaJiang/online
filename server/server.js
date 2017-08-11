@@ -33,14 +33,13 @@ function date(){
 
 const Online=new online();
 
-ws.on('connection',
-function(socket) {
+ws.on('connection',function(socket){
 	Online.handle(socket);
 });
 
-Online.on('new',g=>log('[new]',g,`[${Online.groups.size} group(s)]`));
-Online.on('remove',g=>log('[remove]',g,`[${Online.groups.size} group(s)]`));
-Online.on('ol',(g,n)=>log('[online]',`(${n}) ${g}`));
+Online.on('new',g=>log('[new]',g));
+Online.on('remove',g=>log('[remove]',g));
+Online.on('ol',d=>log('[online]',`G:${d.g} Connection:${d.c} User:${d.u}`));
 
 process.on("uncaughtException",function(e){
 	log(e);
