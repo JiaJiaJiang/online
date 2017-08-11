@@ -13,6 +13,7 @@
 			this.onOnlineChange=null;
 			this.pinger=setInterval(()=>{this.opened&&this.ws.send('');},20000);
 			this.user=`${Date.now().toString(32)}-${randomUser()}`;
+			this.ws=null;
 			if(window.sessionStorage){//use stored user sign
 				var user=sessionStorage.getItem('online_user');
 				if(!user)sessionStorage.setItem('online_user',this.user);//save the user
@@ -82,5 +83,7 @@
 	function randomUser(){
 		return ((999999999999999*Math.random())|0).toString(32);
 	}
+
+	window.Online=Online;
 })();
 //sessionStorage
