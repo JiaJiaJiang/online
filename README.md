@@ -28,7 +28,7 @@ node index.js
 在启动服务端之后在浏览器中打开`client/demo.html`查看。
 
 ### 使用
-1. 在浏览器中引用`client/online.bable.js`或`client/online.js`(本服务端支持client目录下的静态文件输出)。
+1. 在浏览器中引用`client/online.babel.js`或`client/online.js`(本服务端支持client目录下的静态文件输出)。
 2. 在需要统计在线人数的页面上添加代码
 
 ```javascript
