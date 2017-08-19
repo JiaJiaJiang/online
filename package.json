@@ -3,12 +3,13 @@
   "description": "online",
   "version": "0.0.1",
   "main": "index.js",
-  "scripts":{
-  	"start":"node server/server.js"
+  "scripts": {
+    "start": "node server/server.js"
   },
   "author": "luojia@luojia.me",
-  "license": "MTI",
+  "license": "MIT",
   "dependencies": {
-    "ws": "^1.1.1"
+    "http_request_pack": "^1.0.1",
+    "ws": "^3.1.0"
   }
 }

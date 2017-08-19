@@ -12,11 +12,11 @@
 			this.on=false;
 			this.onOnlineChange=null;
 			this.pinger=setInterval(()=>{this.opened&&this.ws.send('');},20000);
-			this.user=`${Date.now().toString(32)}-${randomUser()}`;
+			this.user=`${conv(Date.now(),10,62)}-${randomUser()}`;
 			this.ws=null;
-			if(window.sessionStorage){//use stored user sign
-				var user=sessionStorage.getItem('online_user');
-				if(!user)sessionStorage.setItem('online_user',this.user);//save the user
+			if(window.localStorage){//use stored user sign
+				var user=localStorage.getItem('online_user');
+				if(!user)localStorage.setItem('online_user',this.user);//save the user
 				else{this.user=user;}//restore the user
 			}
 			if(addr){
@@ -45,7 +45,7 @@
 			return this;
 		}
 		_report(data){
-			this.onOnlineChange&&this.onOnlineChange(group,ol);
+			this.onOnlineChange&&this.onOnlineChange(data);
 		}
 		connet(addr){
 			if(addr)this.addr=addr;
@@ -81,7 +81,24 @@
 	}
 
 	function randomUser(){
-		return ((999999999999999*Math.random())|0).toString(32);
+		return conv(Math.round(99999999*Math.random()),10,62);
+	}
+
+	//gist: https://gist.coding.net/u/luojia/c33a7e50d9634a1d9084ebd71c468114/
+	function conv(n,o,t,olist,tlist){//数,原进制,目标进制[,原数所用字符表,目标字符表]
+		var dlist='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+			tnum=[],m,negative=((n+='').trim()[0]=='-'),decnum=0;
+		olist||(olist=dlist);
+		tlist||(tlist=dlist);
+		if(negative)n=n.slice(1);
+		for(var i=n.length;i--;)
+			decnum+=olist.indexOf(n[i])*Math.pow(o,n.length-i-1);
+		for(;decnum!=0;tnum.unshift(tlist[m])){
+			m=decnum%t;
+			decnum=Math.floor(decnum/t);
+		}
+		decnum&&tnum.unshift(tlist[decnum]);
+		return (negative?'-':'')+tnum.join('');
 	}
 
 	window.Online=Online;

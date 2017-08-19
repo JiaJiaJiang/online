@@ -1,36 +1,48 @@
 /*!
  * online
- * Copyright(c) 2016 luojia <luojia@luojia.me>
+ * Copyright(c) 2017 luojia <luojia@luojia.me>
  * MIT Licensed
  */
 'use strict';
+const http=require('http');
 const WebSocketServer = require('ws').Server;
 const online=require('../lib/online.js').online;
+const request_pack=require('http_request_pack');
 const options=require('./config.js');
 
 
-var log=(...args)=>console.log(`[${date()}]`,...args);
+var log=(...args)=>console.log(`[${(new Date).toLocaleString()}]`,...args);
 if (options.displayLogs !== true) {
 	log=()=>{};
 }
 
-log('Settings:');
-log(options);
+log('Settings:',options);
 
-var wsOpt={
-	port:options.port,
+var httpOpt={
+	port:options.port||3309,
+	host:options.host||'0.0.0.0'
 }
-if(options.host)wsOpt.host=options.host;
-var ws = new WebSocketServer(wsOpt);
 
+var server=http.createServer(function(req,res){
+	if(ws.shouldHandle(req))return;
+	queue.eat(req,res);
+}).listen(options.port,httpOpt.host);
+
+var queue=new request_pack.reqQueue();
+queue.add(function(reqClass){
+	if(reqClass.req.url.startsWith('/client/')){
+		var t=reqClass.url.pathname.replace(/^\/client\//,'');
+		staticDir.eat(reqClass,t);
+		return;
+	}
+});
+
+
+var staticDir=new request_pack.staticFile.handleDir(require('path').resolve('../client'));
+
+
+var ws = new WebSocketServer({server:server,path:'/online'});
 console.log("creating online server  on port " + (options.port || 3309));
-
-
-function date(){
-	let t=new Date();
-	return `${t.getFullYear()}/${t.getMonth()+1}/${t.getDate()} ${t.getHours()}:${t.getMinutes()}:${t.getSeconds()}`;
-}
-
 const Online=new online();
 
 ws.on('connection',function(socket){
