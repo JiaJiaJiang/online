@@ -38,7 +38,7 @@ queue.add(function(reqClass){
 });
 
 
-var staticDir=new request_pack.staticFile.handleDir(require('path').resolve('../client'));
+var staticDir=new request_pack.staticFile.handleDir(require('path').resolve(__dirname,'../client'));
 
 
 var ws = new WebSocketServer({server:server,path:'/online'});
