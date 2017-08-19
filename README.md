@@ -24,12 +24,12 @@ node server/server.js
 ## 浏览器端
 
 ### 使用
-1. 在浏览器中引用`client/online.bable.js`。
+1. 在浏览器中引用`client/online.bable.js`或`client/online.js`(本服务端支持client目录下的静态文件输出)。
 2. 在需要统计在线人数的页面上添加代码
 
 ```javascript
 //示例代码
-var ol=new Online('wss://online.luojia.me:8443');//新建Online对象
+var ol=new Online('wss://online服务器地址:端口/online');//新建Online对象
 ol.enter('频道1').enter('频道2').enter('频道3');//可加入多个频道
 //频道名建议使用可以独立标识页面的值，比如页面id，不建议使用页面url。
 ol.onOnlineChange=function(msg){//频道内在线数量变化时
