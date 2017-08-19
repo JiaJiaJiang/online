@@ -47,7 +47,7 @@ ol.onOnlineChange=function(msg){//频道内在线数量变化时
 
 # 类说明
 
-# Class:Online
+# Class:client/Online
 
 ##方法
 
@@ -89,3 +89,4 @@ ol.enter('频道1').enter('频道2').enter('频道3');
 ## 属性
 
 * [getter]opened：(bool)返回这个在线对象是否已经打开连接
+
