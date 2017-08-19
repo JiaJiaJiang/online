@@ -4,5 +4,6 @@
  * MIT Licensed
  */
 'use strict';
-Object.assign(exports,require('./lib/online.js'));
+
+module.exports=require('./lib/online.js');
  
