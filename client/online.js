@@ -10,6 +10,7 @@
 			this.addr=addr;
 			this.groups=new Set();
 			this.on=false;
+			this.waiting=false;
 			this.onOnlineChange=null;
 			this.pinger=setInterval(()=>{this.opened&&this.ws.send('');},20000);
 			this.user=`${conv(Date.now(),10,62)}-${randomUser()}`;
@@ -48,6 +49,7 @@
 			this.onOnlineChange&&this.onOnlineChange(data);
 		}
 		connet(addr){
+			this.waiting=false;
 			if(addr)this.addr=addr;
 			if(this.on===false)return;
 			if(this.opened)return;
@@ -68,8 +70,13 @@
 				}
 			}
 			ws.onclose=e=>{
+				if(this.waiting)return;
 				for(let g of this.groups)this._report({g:g,c:0,u:0});
+				this.waiting=true;
 				setTimeout(()=>{this.connet()},5000);
+			}
+			ws.onerror=e=>{
+				ws.onclose();
 			}
 			return this;
 		}
