@@ -15,7 +15,7 @@ const URL=require('url');
 var log=(...args)=>console.log(`[${(new Date).toLocaleString()}]`,...args);
 if(options.displayLogs!==true)log=()=>{};
 
-log('Settings:',options);
+console.log('Settings:',options);
 
 //http options
 var httpOpt={
@@ -37,7 +37,7 @@ var server=http.createServer(function(req,res){
 	}
 	queue.eat(req,res);
 }).listen(options.port,httpOpt.host);
-log(`creating online server on ${httpOpt.host}:${options.port}`);
+console.log(`creating online server on ${httpOpt.host}:${options.port}`);
 
 
 //request queue (router)
