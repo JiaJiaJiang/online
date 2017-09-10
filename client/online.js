@@ -78,8 +78,7 @@
 				if(m.data==='connected'){
 					ws.connected=true;
 					for(let g of this.groups)this.enter(g);
-					if(this.subscribing)
-						this.subscribe();
+					this.subscribing&&this.subscribe();
 					this.onConnected&&this.onConnected();
 					return;
 				}
@@ -99,13 +98,12 @@
 			}
 			ws.onclose=e=>{
 				if(this.waiting)return;
-				for(let g of this.groups)this._reportOl({g:g,c:0,u:0});
+				if(this.connected)for(let g of this.groups)this._reportOl({g:g,c:0,u:0});
+				this.ws.connected=false;
 				this.waiting=true;
 				setTimeout(()=>{this.connet()},5000);
 			}
-			ws.onerror=e=>{
-				ws.onclose();
-			}
+			ws.onerror=e=>ws.onclose();
 			return this;
 		}
 		close(){

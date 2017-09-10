@@ -48,6 +48,8 @@ queue.add(function(reqClass){
 		staticDir.eat(reqClass,t);
 		return;
 	}
+	reqClass.statusCode=404;
+	reqClass.end();
 });
 
 
