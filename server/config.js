@@ -6,7 +6,7 @@ var conf=module.exports={
 	maxGroupToEnter:0,//最多可加入多少组，0为不限
 }
 
-if(process.env.PORT!=undefined)conf.port=Number(process.env.PORT);
+if(process.env.port!=undefined)conf.port=Number(process.env.port);
 if(process.env.displayLogs!=undefined)conf.displayLogs=(process.env.displayLogs=='true')?true:false;
 if(process.env.allowedHost!=undefined)conf.allowedHost=JSON.parse(process.env.allowedHost);
 if(process.env.subscriberAPI!=undefined)conf.subscriberAPI=(process.env.subscriberAPI=='true')?true:false;
