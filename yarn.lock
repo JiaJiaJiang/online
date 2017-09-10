@@ -10,9 +10,9 @@ cookie@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
 
-http_request_pack@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/http_request_pack/-/http_request_pack-1.0.1.tgz#cce089fdafa8bb7076c81a8ca92a316b70a59589"
+http_request_pack@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/http_request_pack/-/http_request_pack-1.0.2.tgz#14a166a534c5f82d0d4a60581f6064aac36ea8bb"
   dependencies:
     async_generator "^1.0.0"
     cookie "^0.3.1"

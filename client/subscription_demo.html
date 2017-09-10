@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>subscription demo</title>
+	<script src='online.js'></script>
+</head>
+<body>
+打开此页面后再打开数个demo.html观察效果。
+<div id="log" style="white-space:pre;"></div>
+<script>
+var ol=new Online('ws://'+location.host+'/online');
+var logDiv=document.querySelector('#log');
+
+ol.subscribe();
+ol.onOnlineChange=function(msg){
+	console.log(msg);
+	if(msg._!=='subol')return;
+	logDiv.innerHTML+=('g:'+msg.g+'    u:'+msg.u+' c:'+msg.c+'\n');
+}
+
+
+</script>
+</body>
+</html>

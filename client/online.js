@@ -12,9 +12,12 @@
 			this.on=false;
 			this.waiting=false;
 			this.onOnlineChange=null;
-			this.pinger=setInterval(()=>{this.opened&&this.ws.send('');},20000);
+			this.onData=null;
+			this.onConnected=null;
+			this.pinger=setInterval(()=>{this.opened&&this.ws.send('');},25000);
 			this.user=`${conv(Date.now(),10,62)}-${randomUser()}`;
 			this.ws=null;
+			this.subscribing=false;
 			if(window.localStorage){//use stored user sign
 				var user=localStorage.getItem('online_user');
 				if(!user)localStorage.setItem('online_user',this.user);//save the user
@@ -26,26 +29,43 @@
 			}
 		}
 		get opened(){return this.ws&&this.ws.readyState===1;}
+		get connected(){return this.ws.connected;}
+		send(data){
+			this.ws.send(JSON.stringify(data));
+		}
 		enter(name){
 			if(typeof name !== 'string')throw('name is not a string:'+name);
 			this.groups.add(name);
-			if(this.opened)
-				this.ws.send(JSON.stringify({_:'enter',g:name,u:this.user}));
+			if(this.connected)
+				this.send({_:'enter',g:name,u:this.user});
 			return this;
 		}
 		leave(name){
 			if(typeof name !== 'string')throw('name is not a string:'+name);
-			if(this.opened && this.groups.delete(name)){
-				this.ws.send(JSON.stringify({_:'leave',g:name}));
+			if(this.connected && this.groups.delete(name)){
+				this.send({_:'leave',g:name});
 			}
 			return this;
 		}
+		subscribe(force){
+			this.subscribing=true;
+			if(this.connected)
+				this.send({_:'sub',opt:'sub',u:this.user});
+		}
+		unsubscribe(){
+			this.subscribing=false;
+			if(this.connected)
+				this.send({_:'sub',opt:'unsub'});
+		}
+		requestList(){
+			this.send({_:'sub',opt:'list'});
+		}
 		leaveAll(){
-			if(this.opened)
+			if(this.connected)
 				for(let g of this.groups)this.leave(g);
 			return this;
 		}
-		_report(data){
+		_reportOl(data){
 			this.onOnlineChange&&this.onOnlineChange(data);
 		}
 		connet(addr){
@@ -56,22 +76,30 @@
 			let ws=this.ws=new WebSocket(this.addr);
 			ws.onmessage=m=>{
 				if(m.data==='connected'){
+					ws.connected=true;
 					for(let g of this.groups)this.enter(g);
+					if(this.subscribing)
+						this.subscribe();
+					this.onConnected&&this.onConnected();
 					return;
 				}
 				let msg=JSON.parse(m.data);
 				switch(msg._){
-					case 'ol':{
+					case 'ol':case 'subol':{
 						msg.c=parseInt(msg.c,32);
 						msg.u=parseInt(msg.u,32);
-						this._report(msg);
+						this._reportOl(msg);
+						break;
+					}
+					default:{
+						this.onData&&this.onData(msg);
 						break;
 					}
 				}
 			}
 			ws.onclose=e=>{
 				if(this.waiting)return;
-				for(let g of this.groups)this._report({g:g,c:0,u:0});
+				for(let g of this.groups)this._reportOl({g:g,c:0,u:0});
 				this.waiting=true;
 				setTimeout(()=>{this.connet()},5000);
 			}

@@ -9,26 +9,39 @@ const WebSocketServer = require('ws').Server;
 const online=require('../lib/online.js').online;
 const request_pack=require('http_request_pack');
 const options=require('./config.js');
+const URL=require('url');
 
-
+//define a log function
 var log=(...args)=>console.log(`[${(new Date).toLocaleString()}]`,...args);
-if (options.displayLogs !== true) {
-	log=()=>{};
-}
+if(options.displayLogs!==true)log=()=>{};
 
 log('Settings:',options);
 
+//http options
 var httpOpt={
 	port:options.port||3309,
 	host:options.host||'0.0.0.0'
 }
 
+//http server
 var server=http.createServer(function(req,res){
-	if(ws.shouldHandle(req))return;
+	if(ws.shouldHandle(req)){
+		if(Array.isArray(options.allowedHost)){
+			let url=new URL(req.headers['origin']);
+			if(options.allowedHost.indexOf(url.host)>=0){
+				res.wrietHead(403);
+				req.end('not allowed origin');
+			}
+		}
+		return;
+	}
 	queue.eat(req,res);
 }).listen(options.port,httpOpt.host);
+log(`creating online server on ${httpOpt.host}:${options.port}`);
 
-var queue=new request_pack.reqQueue();
+
+//request queue (router)
+var queue=new (request_pack.load('reqQueue'));
 queue.add(function(reqClass){
 	if(reqClass.req.url.startsWith('/client/')){
 		var t=reqClass.url.pathname.replace(/^\/client\//,'');
@@ -38,21 +51,24 @@ queue.add(function(reqClass){
 });
 
 
-var staticDir=new request_pack.staticFile.handleDir(require('path').resolve(__dirname,'../client'));
+//static files
+var staticDir=new (request_pack.load('staticFile')).handleDir(require('path').resolve(__dirname,'../client'));
 
-
+//ws server
 var ws = new WebSocketServer({server:server,path:'/online'});
-console.log("creating online server  on port " + (options.port || 3309));
-const Online=new online();
 
+//online server object
+const Online=new online();
+Online.maxGroupToEnter=options.maxGroupToEnter;
+Online.subscriberAPI=options.subscriberAPI;
 ws.on('connection',function(socket){
 	Online.handle(socket);
 });
-
 Online.on('new',g=>log('[new]',g));
 Online.on('remove',g=>log('[remove]',g));
 Online.on('ol',d=>log('[online]',`G:${d.g} Connection:${d.c} User:${d.u}`));
 
+//prevent exiting on exception
 process.on("uncaughtException",function(e){
 	log(e);
 });

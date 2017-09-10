@@ -17,7 +17,7 @@
 ### 启动
 
 ```javascript
-node index.js
+node server/server.js
 ```
 本服务端没有内置加密连接配置，如果需要使用加密连接，请使用其它支持加密连接的服务器程序转发连接，或者使用支持加密连接的CDN。
 
