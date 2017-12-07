@@ -11,3 +11,4 @@ if(process.env.displayLogs!=undefined)conf.displayLogs=(process.env.displayLogs=
 if(process.env.allowedHost!=undefined)conf.allowedHost=JSON.parse(process.env.allowedHost);
 if(process.env.subscriberAPI!=undefined)conf.subscriberAPI=(process.env.subscriberAPI=='true')?true:false;
 if(process.env.maxGroupToEnter!=undefined)conf.maxGroupToEnter=Number(process.env.maxGroupToEnter);
+

@@ -4,12 +4,26 @@
  * MIT Licensed
  */
 'use strict';
-const http=require('http');
-const WebSocketServer = require('ws').Server;
-const online=require('../lib/online.js').online;
-const request_pack=require('http_request_pack');
-const options=require('./config.js');
-const URL=require('url');
+const http=require('http'),
+	WebSocketServer = require('ws').Server,
+	online=require('../lib/online.js').online,
+	request_pack=require('http_request_pack'),
+	options=require('./config.js'),
+	URL=require('url'),
+	commander = require('commander');
+commander
+	.usage('[options]')
+	.option('-p, --port [value]', 'port to listen')
+	.option('--displayLogs', 'display logs')
+	.option('--allowedHost [value]', 'json with allowed host')
+	.option('--subscriberAPI', 'open subscriberAPI')
+	.option('-m, --maxGroupToEnter [value]', 'maxGroupToEnter')
+	.parse(process.argv);
+
+const optList=['port','displayLogs','allowedHost','subscriberAPI','maxGroupToEnter'];
+optList.forEach(o=>{
+	if(commander[o])options[o]=commander[o];
+});
 
 //define a log function
 var log=(...args)=>console.log(`[${(new Date).toLocaleString()}]`,...args);
