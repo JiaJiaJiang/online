@@ -11,6 +11,7 @@ const http=require('http'),
 	options=require('./config.js'),
 	URL=require('url'),
 	commander = require('commander');
+
 commander
 	.usage('[options]')
 	.option('-p, --port [value]', 'port to listen')
@@ -20,14 +21,20 @@ commander
 	.option('-m, --maxGroupToEnter [value]', 'maxGroupToEnter')
 	.parse(process.argv);
 
-const optList=['port','displayLogs','allowedHost','subscriberAPI','maxGroupToEnter'];
+const optList=['port','host','displayLogs','allowedHost','subscriberAPI','maxGroupToEnter'];
 optList.forEach(o=>{
 	if(commander[o])options[o]=commander[o];
+	else if(process.env[o])options[o]=process.env[o];
 });
+if(typeof options.displayLogs==='string')options.displayLogs=(options.displayLogs=='true')?true:false;
+if(options.allowedHost)options.allowedHost=JSON.parse(options.allowedHost);
+if(typeof options.subscriberAPI==='string')options.subscriberAPI=(options.subscriberAPI=='true')?true:false;
+if(options.maxGroupToEnter)options.maxGroupToEnter=Number(options.maxGroupToEnter);
+
 
 //define a log function
 var log=(...args)=>console.log(`[${(new Date).toLocaleString()}]`,...args);
-if(options.displayLogs!==true)log=()=>{};
+if(options.displayLogs!=true)log=()=>{};
 
 console.log('Settings:',options);
 
