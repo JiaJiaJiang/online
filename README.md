@@ -7,12 +7,8 @@
 
 ### 配置
 修改`server/config.js`
-```javascript
-{
-    port:process.env.PORT||3309,//服务器端口
-    displayLogs:true//是否显示log
-}
-```
+
+见文件注释
 
 ### 启动
 
