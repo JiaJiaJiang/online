@@ -1,4 +1,4 @@
-#online
+# online
 
 用于统计页面实时在线人数的前后端，使用node实现。
 本统计基于"频道"的概念，一个页面可任意加入多个频道（比如区别统计全站在线数和页面在线数）。
@@ -45,7 +45,7 @@ ol.onOnlineChange=function(msg){//频道内在线数量变化时
 
 # Class:client/Online
 
-##方法
+## 方法
 
 ### enter(name)
 
