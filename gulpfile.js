@@ -38,7 +38,7 @@ function transjs(name,cover=90){
 		.pipe(gulp.dest(dist));
 }
 gulp.task('js-main',function(){
-	return transjs('online.js',30);
+	return transjs('online.js',50);
 });
 gulp.task('js-old',function(){
 	return transjs('online.js',90);
