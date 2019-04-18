@@ -3,6 +3,7 @@
  * Copyright(c) 2016 luojia <luojia@luojia.me>
  * MIT Licensed
  */
+
 'use strict';
 (function(){
 	class Online{
