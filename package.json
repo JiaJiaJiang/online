@@ -1,17 +1,20 @@
 {
   "name": "online",
   "description": "online",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js"
   },
+  "bin": {
+    "online": "./server/server.js"
+  },
   "author": "luojia@luojia.me",
   "license": "MIT",
   "dependencies": {
-    "commander": "^2.12.2",
+    "commander": "^2.20.0",
     "http_request_pack": "^1.0.2",
-    "ws": "^3.1.0"
+    "ws": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
