@@ -1,4 +1,5 @@
-/*!
+#!/usr/bin/env node
+/*
  * online
  * Copyright(c) 2017 luojia <luojia@luojia.me>
  * MIT Licensed
