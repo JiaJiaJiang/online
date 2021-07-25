@@ -14,7 +14,7 @@
   "dependencies": {
     "commander": "^2.20.0",
     "http_request_pack": "^1.0.2",
-    "ws": "^7.0.0"
+    "ws": "^5.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
