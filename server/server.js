@@ -10,7 +10,7 @@ const http=require('http'),
 	online=require('../lib/online.js').online,
 	request_pack=require('http_request_pack'),
 	options=require('./config.js'),
-	URL=require('url'),
+	URL=require('url').URL,
 	commander = require('commander');
 
 commander
@@ -47,18 +47,10 @@ var httpOpt={
 
 //http server
 var server=http.createServer(function(req,res){
-	if(ws.shouldHandle(req)){
-		if(Array.isArray(options.allowedHost)){
-			let url=new URL(req.headers['origin']);
-			if(options.allowedHost.indexOf(url.host)>=0){
-				res.wrietHead(403);
-				req.end('not allowed origin');
-			}
-		}
-		return;
-	}
+	if(ws.shouldHandle(req))return;
 	queue.eat(req,res);
 }).listen(options.port,httpOpt.host);
+
 console.log(`creating online server on ${httpOpt.host}:${options.port}`);
 
 
@@ -81,6 +73,21 @@ var staticDir=new (request_pack.load('staticFile')).handleDir(require('path').re
 //ws server
 var ws = new WebSocketServer({server:server,path:'/online'});
 
+if(Array.isArray(options.allowedHost)){//override ws server shuoldHandle method
+	ws.shouldHandle=function(req){
+		if (this.options.path) {
+			const index = req.url.indexOf('?');
+			const pathname = index !== -1 ? req.url.slice(0, index) : req.url;
+			if (pathname !== this.options.path) return false;
+		}
+		let url=new URL(req.headers['origin']);
+		if(options.allowedHost.indexOf(url.hostname)===-1){
+			return false;
+		}
+		return true;
+	}
+}
+
 //online server object
 const Online=new online();
 Online.maxGroupToEnter=options.maxGroupToEnter;
@@ -94,5 +101,5 @@ Online.on('ol',d=>log('[online]',`G:${d.g} Connection:${d.c} User:${d.u}`));
 
 //prevent exiting on exception
 process.on("uncaughtException",function(e){
-	log(e);
+	console.error(e);
 });
