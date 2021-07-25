@@ -27,7 +27,7 @@ optList.forEach(o=>{
 	else if(process.env[o])options[o]=process.env[o];
 });
 if(typeof options.displayLogs==='string')options.displayLogs=(options.displayLogs=='true')?true:false;
-if(options.allowedHost)options.allowedHost=JSON.parse(options.allowedHost);
+if(options.allowedHost)if(typeof options.allowedHost==='string')options.allowedHost=JSON.parse(options.allowedHost);
 if(typeof options.subscriberAPI==='string')options.subscriberAPI=(options.subscriberAPI=='true')?true:false;
 if(options.maxGroupToEnter)options.maxGroupToEnter=Number(options.maxGroupToEnter);
 
