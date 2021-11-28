@@ -29,8 +29,9 @@ commander
 	.parse(process.argv);
 
 const optList=['port','host','displayLogs','allowedHost','subscriberAPI','maxGroupToEnter'];
+const opts = commander.opts();
 optList.forEach(o=>{
-	if(commander[o])options[o]=commander[o];
+	if(opts[o])options[o]=opts[o];
 	else if(process.env[o])options[o]=process.env[o];
 });
 if(typeof options.displayLogs==='string')options.displayLogs=(options.displayLogs=='true')?true:false;
