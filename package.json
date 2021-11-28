@@ -13,15 +13,16 @@
   "author": "luojia@luojia.me",
   "license": "MIT",
   "dependencies": {
-    "@babel/plugin-proposal-export-default-from": "^7.16.0",
-    "babel-plugin-remove-comments": "^2.0.0",
-    "babel-preset-minify": "^0.5.1",
     "commander": "^8.3.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "http_request_pack": "^1.0.2",
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
     "ws": "^8.3.0"
   },
   "devDependencies": {
+    "gulp-sourcemaps": "^3.0.0",
+    "@babel/plugin-proposal-export-default-from": "^7.16.0",
+    "babel-plugin-remove-comments": "^2.0.0",
+    "babel-preset-minify": "^0.5.1",
     "@babel/core": "^7.16.0",
     "@babel/plugin-transform-modules-commonjs": "^7.16.0",
     "@babel/preset-env": "^7.16.4",

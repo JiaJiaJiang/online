@@ -6,13 +6,19 @@
  */
 'use strict';
 const http=require('http'),
+	express = require('express'),
+	compression = require('compression'),
 	WebSocketServer = require('ws').Server,
 	online=require('../lib/online.js').online,
-	request_pack=require('http_request_pack'),
-	options=require('./config.js'),
 	URL=require('url').URL,
 	commander = require('commander');
-
+let options;
+try{
+	options=require('./config.js');
+}catch(e){
+	console.warn('"server/config.js" not defined, using "server/config.sample.js"');
+	options=require('./config.sample.js');
+}
 commander
 	.usage('[options]')
 	.option('-p, --port [value]', 'port to listen')
@@ -39,42 +45,27 @@ if(options.displayLogs!=true)log=()=>{};
 
 console.log('Settings:',options);
 
+//express
+const app = express();
+const staticRouter=express.Router();
+staticRouter.get('*',express.static(__dirname+'/../client'));
+app.set('x-powered-by', false);
+app.use(compression());
+app.use('/client/',staticRouter);//静态文件 
+
 //http options
 var httpOpt={
 	port:options.port||3309,
 	host:options.host||'0.0.0.0'
-}
-
+};
 //http server
-var server=http.createServer(function(req,res){
-	if(wserver.shouldHandle(req))return;
-	queue.eat(req,res);
-}).listen(options.port,httpOpt.host);
-
+var server=http.createServer(app).listen(options.port,httpOpt.host);
 console.log(`creating online server on ${httpOpt.host}:${options.port}`);
-
-
-//request queue (router)
-var queue=new (request_pack.load('reqQueue'));
-queue.add(function(reqClass){
-	if(reqClass.req.url.startsWith('/client/')){
-		var t=reqClass.url.pathname.replace(/^\/client\//,'');
-		staticDir.eat(reqClass,t);
-		return;
-	}
-	reqClass.statusCode=404;
-	reqClass.end();
-});
-
-
-//static files
-var staticDir=new (request_pack.load('staticFile')).handleDir(require('path').resolve(__dirname,'../client'));
-
 //ws server
-var wserver = new WebSocketServer({server:server,path:'/online'});
+var wserver = new WebSocketServer({server,path:'/online'});
 
 if(Array.isArray(options.allowedHost)){//override ws server shuoldHandle method
-	wserver.shouldHandle=function(req){
+	wserver.shouldHandle=(req)=>{
 		if (this.options.path) {
 			const index = req.url.indexOf('?');
 			const pathname = index !== -1 ? req.url.slice(0, index) : req.url;
@@ -87,6 +78,7 @@ if(Array.isArray(options.allowedHost)){//override ws server shuoldHandle method
 		return true;
 	}
 }
+
 
 //online server object
 const Online=new online();
