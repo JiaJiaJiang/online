@@ -47,7 +47,7 @@ var httpOpt={
 
 //http server
 var server=http.createServer(function(req,res){
-	if(ws.shouldHandle(req))return;
+	if(wserver.shouldHandle(req))return;
 	queue.eat(req,res);
 }).listen(options.port,httpOpt.host);
 
@@ -71,10 +71,10 @@ queue.add(function(reqClass){
 var staticDir=new (request_pack.load('staticFile')).handleDir(require('path').resolve(__dirname,'../client'));
 
 //ws server
-var ws = new WebSocketServer({server:server,path:'/online'});
+var wserver = new WebSocketServer({server:server,path:'/online'});
 
 if(Array.isArray(options.allowedHost)){//override ws server shuoldHandle method
-	ws.shouldHandle=function(req){
+	wserver.shouldHandle=function(req){
 		if (this.options.path) {
 			const index = req.url.indexOf('?');
 			const pathname = index !== -1 ? req.url.slice(0, index) : req.url;
@@ -92,12 +92,13 @@ if(Array.isArray(options.allowedHost)){//override ws server shuoldHandle method
 const Online=new online();
 Online.maxGroupToEnter=options.maxGroupToEnter;
 Online.subscriberAPI=options.subscriberAPI;
-ws.on('connection',function(socket){
-	Online.handle(socket);
-});
 Online.on('new',g=>log('[new]',g));
 Online.on('remove',g=>log('[remove]',g));
 Online.on('ol',d=>log('[online]',`G:${d.g} Connection:${d.c} User:${d.u}`));
+
+wserver.on('connection',function(socket){
+	Online.handle(socket);
+});
 
 //prevent exiting on exception
 process.on("uncaughtException",function(e){

@@ -6,5 +6,3 @@ var conf=module.exports={
 	subscriberAPI:true,//开放订阅接口
 	maxGroupToEnter:0,//最多可加入多少组，0为不限
 }
-
-
