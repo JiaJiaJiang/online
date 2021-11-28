@@ -66,7 +66,7 @@ console.log(`creating online server on ${httpOpt.host}:${options.port}`);
 var wserver = new WebSocketServer({server,path:'/online'});
 
 if(Array.isArray(options.allowedHost)){//override ws server shuoldHandle method
-	wserver.shouldHandle=(req)=>{
+	wserver.shouldHandle=function(req){
 		if (this.options.path) {
 			const index = req.url.indexOf('?');
 			const pathname = index !== -1 ? req.url.slice(0, index) : req.url;
