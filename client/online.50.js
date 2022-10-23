@@ -1,6 +1,179 @@
-(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-'use strict';(function(){function randomUser(){return conv(Math.round(99999999*Math.random()),10,62)}function conv(n,o,t,olist,tlist){var m,_Mathfloor=Math.floor,_Mathpow=Math.pow,tnum=[],negative="-"==(n+="").trim()[0],decnum=0;olist||(olist="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"),tlist||(tlist="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"),negative&&(n=n.slice(1));for(var i=n.length;i--;)decnum+=olist.indexOf(n[i])*_Mathpow(o,n.length-i-1);for(;0!=decnum;tnum.unshift(tlist[m]))m=decnum%t,decnum=_Mathfloor(decnum/t);return decnum&&tnum.unshift(tlist[decnum]),(negative?"-":"")+tnum.join("")}class Online{constructor(addr){if(this.addr=addr,this.groups=new Set,this.on=!1,this.waiting=!1,this.onOnlineChange=null,this.onData=null,this.onConnected=null,this.pinger=setInterval(()=>{this.opened&&this.ws.send("")},25e3),this.user=`${conv(Date.now(),10,62)}-${randomUser()}`,this.ws=null,this.subscribing=!1,window.localStorage){var user=localStorage.getItem("online_user");user?this.user=user:localStorage.setItem("online_user",this.user)}addr&&(this.on=!0,this.connet())}get opened(){return this.ws&&1===this.ws.readyState}get connected(){return this.ws.connected}send(data){this.ws.send(JSON.stringify(data))}enter(name){if("string"!=typeof name)throw"name is not a string:"+name;return this.groups.add(name),this.connected&&this.send({_:"enter",g:name,u:this.user}),this}leave(name){if("string"!=typeof name)throw"name is not a string:"+name;return this.connected&&this.groups.delete(name)&&this.send({_:"leave",g:name}),this}subscribe(){this.subscribing=!0,this.connected&&this.send({_:"sub",opt:"sub",u:this.user})}unsubscribe(){this.subscribing=!1,this.connected&&this.send({_:"sub",opt:"unsub"})}requestList(){this.send({_:"sub",opt:"list"})}leaveAll(){if(this.connected)for(let g of this.groups)this.leave(g);return this}_reportOl(data){this.onOnlineChange&&this.onOnlineChange(data)}connet(addr){if(this.waiting=!1,addr&&(this.addr=addr),!1===this.on)return;if(this.opened)return;let ws=this.ws=new WebSocket(this.addr);return ws.onmessage=m=>{if("connected"===m.data){ws.connected=!0;for(let g of this.groups)this.enter(g);return this.subscribing&&this.subscribe(),void(this.onConnected&&this.onConnected())}let msg=JSON.parse(m.data);switch(msg._){case"ol":case"subol":{msg.c=parseInt(msg.c,32),msg.u=parseInt(msg.u,32),this._reportOl(msg);break}default:{this.onData&&this.onData(msg);break}}},ws.onclose=()=>{if(!this.waiting){if(this.connected)for(let g of this.groups)this._reportOl({g:g,c:0,u:0});this.ws.connected=!1,this.waiting=!0,setTimeout(()=>{this.connet()},5e3)}},ws.onerror=()=>ws.onclose(),this}close(){this.on=!1,this.ws.close(),clearInterval(this.pinger)}}window.Online=Online})();
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Online = factory());
+})(this, (function () { 'use strict';
 
-},{}]},{},[1]);
+	/*!
+	 * online
+	 * Copyright(c) 2016 luojia <luojia@luojia.me>
+	 * MIT Licensed
+	 */
 
+	class Online {
+	  constructor(addr) {
+	    this.addr = addr;
+	    this.groups = new Set();
+	    this.on = false;
+	    this.waiting = false;
+	    this.onOnlineChange = null;
+	    this.onData = null;
+	    this.onConnected = null;
+	    this.pinger = setInterval(() => {
+	      this.opened && this.ws.send('');
+	    }, 25000);
+	    this.user = `${conv(Date.now(), 10, 62)}-${randomUser()}`;
+	    this.ws = null;
+	    this.subscribing = false;
+	    if (window.localStorage) {
+	      //use stored user sign
+	      var user = localStorage.getItem('online_user');
+	      if (!user) localStorage.setItem('online_user', this.user); //save the user
+	      else {
+	        this.user = user;
+	      } //restore the user
+	    }
+
+	    if (addr) {
+	      this.on = true;
+	      this.connet();
+	    }
+	  }
+	  get opened() {
+	    return this.ws && this.ws.readyState === 1;
+	  }
+	  get connected() {
+	    return this.ws.connected;
+	  }
+	  send(data) {
+	    this.ws.send(JSON.stringify(data));
+	  }
+	  enter(name) {
+	    if (typeof name !== 'string') throw 'name is not a string:' + name;
+	    this.groups.add(name);
+	    if (this.connected) this.send({
+	      _: 'enter',
+	      g: name,
+	      u: this.user
+	    });
+	    return this;
+	  }
+	  leave(name) {
+	    if (typeof name !== 'string') throw 'name is not a string:' + name;
+	    if (this.connected && this.groups.delete(name)) {
+	      this.send({
+	        _: 'leave',
+	        g: name
+	      });
+	    }
+	    return this;
+	  }
+	  subscribe(force) {
+	    this.subscribing = true;
+	    if (this.connected) this.send({
+	      _: 'sub',
+	      opt: 'sub',
+	      u: this.user
+	    });
+	  }
+	  unsubscribe() {
+	    this.subscribing = false;
+	    if (this.connected) this.send({
+	      _: 'sub',
+	      opt: 'unsub'
+	    });
+	  }
+	  requestList() {
+	    this.send({
+	      _: 'sub',
+	      opt: 'list'
+	    });
+	  }
+	  leaveAll() {
+	    if (this.connected) for (let g of this.groups) this.leave(g);
+	    return this;
+	  }
+	  _reportOl(data) {
+	    this.onOnlineChange && this.onOnlineChange(data);
+	  }
+	  connet(addr) {
+	    this.waiting = false;
+	    if (addr) this.addr = addr;
+	    if (this.on === false) return;
+	    if (this.opened) return;
+	    let ws = this.ws = new WebSocket(this.addr);
+	    ws.onmessage = m => {
+	      if (m.data === 'connected') {
+	        ws.connected = true;
+	        for (let g of this.groups) this.enter(g);
+	        this.subscribing && this.subscribe();
+	        this.onConnected && this.onConnected();
+	        return;
+	      }
+	      let msg = JSON.parse(m.data);
+	      switch (msg._) {
+	        case 'ol':
+	        case 'subol':
+	          {
+	            msg.c = parseInt(msg.c, 32);
+	            msg.u = parseInt(msg.u, 32);
+	            this._reportOl(msg);
+	            break;
+	          }
+	        default:
+	          {
+	            this.onData && this.onData(msg);
+	            break;
+	          }
+	      }
+	    };
+	    ws.onclose = e => {
+	      if (this.waiting) return;
+	      if (this.connected) for (let g of this.groups) this._reportOl({
+	        g: g,
+	        c: 0,
+	        u: 0
+	      });
+	      this.ws.connected = false;
+	      this.waiting = true;
+	      setTimeout(() => {
+	        this.connet();
+	      }, 5000);
+	    };
+	    ws.onerror = e => ws.onclose();
+	    return this;
+	  }
+	  close() {
+	    this.on = false;
+	    this.ws.close();
+	    clearInterval(this.pinger);
+	  }
+	}
+	function randomUser() {
+	  return conv(Math.round(99999999 * Math.random()), 10, 62);
+	}
+
+	//gist: https://gist.coding.net/u/luojia/c33a7e50d9634a1d9084ebd71c468114/
+	function conv(n, o, t, olist, tlist) {
+	  //数,原进制,目标进制[,原数所用字符表,目标字符表]
+	  var dlist = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+	    tnum = [],
+	    m,
+	    negative = (n += '').trim()[0] == '-',
+	    decnum = 0;
+	  olist || (olist = dlist);
+	  tlist || (tlist = dlist);
+	  if (negative) n = n.slice(1);
+	  for (var i = n.length; i--;) decnum += olist.indexOf(n[i]) * Math.pow(o, n.length - i - 1);
+	  for (; decnum != 0; tnum.unshift(tlist[m])) {
+	    m = decnum % t;
+	    decnum = Math.floor(decnum / t);
+	  }
+	  decnum && tnum.unshift(tlist[decnum]);
+	  return (negative ? '-' : '') + tnum.join('');
+	}
+
+	return Online;
+
+}));
 //# sourceMappingURL=online.50.js.map

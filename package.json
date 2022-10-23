@@ -5,10 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
-    "build": "gulp build"
+    "build": "cross-env BROWSER_COVER=50 && rollup -c "
   },
   "bin": {
     "online": "./server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JiaJiaJiang/online.git"
   },
   "author": "luojia@luojia.me",
   "license": "MIT",
@@ -18,21 +22,14 @@
     "express": "^4.17.1",
     "ws": "^8.3.0"
   },
+  "type": "module",
   "devDependencies": {
-    "gulp-sourcemaps": "^3.0.0",
-    "@babel/plugin-proposal-export-default-from": "^7.16.0",
-    "babel-plugin-remove-comments": "^2.0.0",
-    "babel-preset-minify": "^0.5.1",
-    "@babel/core": "^7.16.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.16.0",
-    "@babel/preset-env": "^7.16.4",
-    "babelify": "^10.0.0",
-    "browserify": "^17.0.0",
-    "browserslist-useragent": "^3.0.3",
-    "core-js": "^3.19.1",
-    "gulp": "^4.0.2",
-    "gulp-rename": "^2.0.0",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "@babel/core": "^7.19.3",
+    "@babel/preset-env": "^7.19.4",
+    "@rollup/plugin-babel": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "core-js": "^3.25.5",
+    "cross-env": "^7.0.3",
+    "rollup": "^3.1.0"
   }
 }

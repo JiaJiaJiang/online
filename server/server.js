@@ -11,10 +11,11 @@ const http=require('http'),
 	WebSocketServer = require('ws').Server,
 	online=require('../lib/online.js').online,
 	URL=require('url').URL,
+	Path=require('path'),
 	commander = require('commander');
 let options;
 try{
-	options=require('./config.js');
+	options=require(Path.resolve(__dirname,process.env.CONFIG_FILE||'./config.js'));
 }catch(e){
 	console.warn('"server/config.js" not defined, using "server/config.sample.js"');
 	options=require('./config.sample.js');

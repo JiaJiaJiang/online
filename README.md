@@ -32,7 +32,7 @@ node server/server.js
 在启动服务端之后在浏览器中打开`client/demo.html`查看。
 
 ### 使用
-1. 在浏览器中引用`client/online.js`或`client/online.xx.js`，其中xx为数字，表示需要支持的浏览器范围百分比(本服务端支持client目录下的静态文件输出)。
+1. 在浏览器中引用`client/online.js`或`client/online.xx.js`，其中xx为数字，表示需要支持的浏览器范围百分比(本服务端支持client目录下的静态文件输出)，默认为50，如果需要其它支持范围，参照`package.json`中的`build`脚本修改数字后执行。
 2. 在需要统计在线人数的页面上添加代码
 
 ```javascript
@@ -93,4 +93,3 @@ ol.enter('频道1').enter('频道2').enter('频道3');
 ## 属性
 
 * [getter]opened：(bool)返回这个在线对象是否已经打开连接
-
