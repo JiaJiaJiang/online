@@ -1,34 +1,34 @@
 {
-  "name": "online",
-  "description": "online",
-  "version": "0.1.1",
-  "main": "index.js",
-  "scripts": {
-    "start": "node server/server.js",
-    "build": "cross-env BROWSER_COVER=50 && rollup -c "
-  },
-  "bin": {
-    "online": "./server/server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JiaJiaJiang/online.git"
-  },
-  "author": "luojia@luojia.me",
-  "license": "MIT",
-  "dependencies": {
-    "commander": "^8.3.0",
-    "compression": "^1.7.4",
-    "express": "^4.17.1",
-    "ws": "^8.3.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.19.3",
-    "@babel/preset-env": "^7.19.4",
-    "@rollup/plugin-babel": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.0",
-    "core-js": "^3.25.5",
-    "cross-env": "^7.0.3",
-    "rollup": "^3.1.0"
-  }
+	"name": "online",
+	"description": "online",
+	"version": "0.1.1",
+	"main": "index.js",
+	"scripts": {
+		"start": "node server/server.js",
+		"build": "cross-env BROWSER_COVER=50 && rollup -c "
+	},
+	"bin": {
+		"online": "./server/server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/JiaJiaJiang/online.git"
+	},
+	"author": "luojia@luojia.me",
+	"license": "MIT",
+	"dependencies": {
+		"commander": "^8.3.0",
+		"compression": "^1.7.4",
+		"express": "^4.17.1",
+		"ws": "^8.3.0"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.21.3",
+		"@babel/preset-env": "^7.20.2",
+		"@rollup/plugin-babel": "^6.0.3",
+		"@rollup/plugin-node-resolve": "^15.0.1",
+		"core-js": "^3.29.1",
+		"cross-env": "^7.0.3",
+		"rollup": "^3.20.2"
+	}
 }
