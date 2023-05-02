@@ -92,4 +92,10 @@ ol.enter('频道1').enter('频道2').enter('频道3');
 
 ## 属性
 
-* [getter]opened：(bool)返回这个在线对象是否已经打开连接
+* [getter] opened：(bool)返回这个在线对象是否已经打开连接
+
+----
+
+## 其它部署教程
+
+* [宝塔部署教程](https://www.qianguw.com/html/server/5355.html)
