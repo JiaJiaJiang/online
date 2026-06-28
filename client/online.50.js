@@ -10,6 +10,7 @@
 	 * MIT Licensed
 	 */
 
+
 	class Online {
 	  constructor(addr) {
 	    this.addr = addr;
@@ -33,10 +34,9 @@
 	        this.user = user;
 	      } //restore the user
 	    }
-
 	    if (addr) {
 	      this.on = true;
-	      this.connet();
+	      this.connect();
 	    }
 	  }
 	  get opened() {
@@ -96,7 +96,7 @@
 	  _reportOl(data) {
 	    this.onOnlineChange && this.onOnlineChange(data);
 	  }
-	  connet(addr) {
+	  connect(addr) {
 	    this.waiting = false;
 	    if (addr) this.addr = addr;
 	    if (this.on === false) return;
@@ -137,7 +137,7 @@
 	      this.ws.connected = false;
 	      this.waiting = true;
 	      setTimeout(() => {
-	        this.connet();
+	        this.connect();
 	      }, 5000);
 	    };
 	    ws.onerror = e => ws.onclose();

@@ -79,7 +79,7 @@ ol.enter('频道1').enter('频道2').enter('频道3');
 
 离开所有频道
 
-### connet([addr])
+### connect([addr])
 
 连接服务器
 
